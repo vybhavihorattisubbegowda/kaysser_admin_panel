@@ -58,7 +58,38 @@
                 </nav>
             </div>
             <div id="layoutSidenav_content">
-                <main>
+               
+                    
+        <div class="modal fade" id="event-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                <form name="save-event" method="post">
+                    <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" name="title" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                    <label>Event start</label>
+                    <input type="text" name="evtStart" class="form-control col-xs-3" />
+                    </div> 
+               
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+            </div>
+            <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>  
+    </main>
                     <div class="container-fluid">
                         <h1 class="mt-4">Attendance</h1>
                         <div id='calendar'></div>
@@ -94,22 +125,40 @@
                 nowIndicator: true,
                 editable: true, 
                 selectable: true,  
-                events: [
-                  { 
-                      id:'a',
-                    title: 'Check-out',
-                    start: '2021-01-21T12:05:00'
-                  }, 
-                  {
-                    title: 'Check-in',
-                    start: '2021-01-21T07:00:00'
-                  },
-                  
-                ]
-              });
-              var event = calendar.getEventById('a')
-              console.log(event);
-              calendar.render();
+                select: function(info) {
+                    console.log(info);
+                        // set values in inputs
+                        $('#event-modal').find('input[name=evtStart]').val(
+                            info.start 
+                        );  
+                        $('#event-modal').modal('show');
+                        calendar.addEvent(info);
+                      
+                        $("#event-modal").find('form').on('submit', function() {
+                             console.log("submitting");
+                           /** $.ajax({
+                                url: 'yourFileUrl.php',
+                                data: $("#event-modal").serialize(),
+                                type: 'post',
+                                dataType: 'json',
+                                success: function(response) {
+                                    // if saved, close modal
+                                    $("#event-modal").modal('hide');
+                                    // refetch event source, so event will be showen in calendar
+                                    $("#calendar").fullCalendar( 'refetchEvents' );
+                                }
+                            }); */
+                        }); 
+                    },
+                    eventClick: function(calEvent) {
+                    var title = prompt("Edit Event Content:", calEvent.title);
+                    calEvent.title = title;
+                    $("#calendar").fullCalendar("updateEvent", calEvent);
+                    
+                    }, 
+                });
+                var event = calendar.getEventById('a') 
+                calendar.render();
             });
           
           </script>
