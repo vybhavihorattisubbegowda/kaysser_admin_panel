@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Page Title - SB Admin</title>
+        <title>Password Recovery</title>
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
     </head>
@@ -20,20 +20,27 @@
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
                                     <div class="card-header"><h3 class="text-center font-weight-light my-4">Password Recovery</h3></div>
                                     <div class="card-body">
-                                        <div class="small mb-3 text-muted">Enter your email address and we will send you a link to reset your password.</div>
-                                        <form>
+                                        <div class="small mb-3 text-muted"></div>
+                                        
+                                     <form class="form-signin">
                                             <div class="form-group">
-                                                <label class="small mb-1" for="inputEmailAddress">Email</label>
-                                                <input class="form-control py-4" id="inputEmailAddress" type="email" aria-describedby="emailHelp" placeholder="Enter email address" />
+                                                <label class="small mb-1" for="inputEmailAddress">Email:</label>
+                                                <input class="form-control py-4" id="email" type="email" aria-describedby="emailHelp" placeholder="E-Mail Adresse eingeben" />
                                             </div>
+                                            <div class="form-group">
+                                                <label class="small mb-1" for="password">New Password:</label>
+                                                <input class="form-control py-4" id="password" name="inputNewPassword" type="password" placeholder="Neues Passwort eingeben" value=""/>
+                                            </div>
+                                            
                                             <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <a class="small" href="login.html">Return to login</a>
-                                                <a class="btn btn-primary" href="login.html">Reset Password</a>
+                                                <a class="small" href="Login.php">Zurück zum Login</a>
+                                                <button type="button" onclick="resetPassword()" class="btn btn-primary">Reset Password</button>
                                             </div>
+                                            
                                         </form>
                                     </div>
                                     <div class="card-footer text-center">
-                                        <div class="small"><a href="register.html">Need an account? Sign up!</a></div>
+                                        <div class="small"></div>
                                     </div>
                                 </div>
                             </div>
@@ -45,7 +52,7 @@
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid">
                         <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Your Website 2020</div>
+                            <div class="text-muted">Copyright &copy; 2021</div>
                             <div>
                                 <a href="#">Privacy Policy</a>
                                 &middot;
@@ -57,7 +64,39 @@
             </div>
         </div>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js" integrity="sha512-nOQuvD9nKirvxDdvQ9OMqe2dgapbPB7vYAMrzJihw5m+aNcf0dX53m6YxM4LgA9u8e9eg9QX+/+mPu8kCNpV2A==" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="js/scripts.js"></script>
+        
+        
+        <!--creating an JSON Request Object for Controller method. It is same as postman postman-->
+        <script>
+        function resetPassword(){
+            const url = 'http://127.0.0.1:8000/mitarbeiter/update/password';
+            const data = {
+                email: $('#email').val(),
+                password:  CryptoJS.MD5($('#password').val()).toString()
+            };
+            const requestObject = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            };
+            //same as try catch block
+            fetch(url, requestObject)
+                .then((response) => {
+                    alert("Password updated successfully");
+                    window.location.href = "Login.php";
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });        
+            
+            }
+        
+        </script>
+
     </body>
 </html>
